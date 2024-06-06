@@ -1,0 +1,29 @@
+<div class="product-card">
+  <div class="inner-card grid collapse two-columns">
+    <div class="card-info text-white product-info-section">
+      <a href="{{ product.url }}" class="product-title">
+        <h2>
+          {{ product.title }} 
+          <span class="price accent-color">{{ product.price |  money_without_trailing_zeros }}</span>
+        </h2>
+      </a>
+      <div class="below-title">
+        <p class="product-description">{{ product.description | strip_html | split: "." | first | append: '.' }}</p>
+        {% if product.variants.size > 1 %}
+          <span class="accent-color">{{ "product.card.options" | t: optionCount: product.variants.size }} &mdash;</span>
+        {% endif %}
+        {% if product.available %}
+          <a href="{{ product.url }}">{{ "product.card.more_info" | t }}</a>
+        {% else %}
+          {{ "product.form.sold_out" | t }}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card-image">
+      <a href="{{ product.url }}">
+        <img src="{{ product.featured_image.src | image_url: width: 1200, height: 900, crop : "center"}}" alt="{{ product.featured_image.alt | escape }}" width="" height="">
+      </a>
+    </div>
+  </div>
+</div>

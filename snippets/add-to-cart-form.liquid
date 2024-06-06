@@ -1,0 +1,34 @@
+<form action="/cart/add" method="post" enctype="multipart/form-data" id="add-to-cart-form">
+  {% if product.variants.size > 1 %}
+    <div class="option-row flex-space-between">
+      <span class="option-title">
+        {{ product.options.first }}
+      </span>
+      <div class="option-fieldset">
+        {% for variant in product.variants %}
+          <input type="radio" name="id" id="variant-{{ forloop.index }}" class="js-variant-radio variant-radio visually-hidden" value="{{ variant.id }}" data-inventory-quantity="{{ variant.inventory_quantity }}" {% unless variant.available %} disabled {% endunless %}>
+          <label class="spaced-caps" for="variant-{{ forloop.index }}">{{ variant.title }}</label>
+        {% endfor %}
+      </div>
+    </div>
+  {%  else %}
+    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+  {% endif %}
+
+  <div class="option-row flex-space-between">
+    <label class="option-title" for="Quantity">{{ "product.form.quantity" | t }}</label>
+    <div class="option-fieldset">
+      <div class="visually-hidden">
+        <input type="number" id="Quantity" class="js-quantity-field" name="quantity" value="1" min="1" {% if product.variants.size == 1 %} max="{{ product.variants.first.inventory_quantity }}" {% endif %}>
+      </div>
+  
+      <div class="">
+        <button class="js-quantity-button minus quantity-button reset-input" type="button" disabled> &mdash; </button>
+          <span class="js-quantity-text quantity-text">1</span>
+        <button class="js-quantity-button plus quantity-button reset-input" type="button"> + </button>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" name="add" id="add-to-cart-button" class="reset-input" {% if product.variants.size > 1 %} disabled {% endif %}>Add to cart</button>
+</form>
