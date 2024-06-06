@@ -64,7 +64,28 @@ $(document).ready(function () {
         }
     };
 
+    const onAddToCart = async function (event) {
+        event.preventDefault();
+
+        let addToCartForm = document.querySelector('form[action$="/cart/add"]');
+        let formData = new FormData(addToCartForm);
+
+        fetch(window.Shopify.routes.root + 'cart/add.j', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
     $(document).on('click', '.js-quantity-button', onQuantityButtonClick);
     $(document).on('change', '.js-quantity-field', onQuantityFieldChange);
     $(document).on('change', '.js-variant-radio', onVariationRadioChange);
+    $(document).on('submit', '#add-to-cart-form', onAddToCart);
 });

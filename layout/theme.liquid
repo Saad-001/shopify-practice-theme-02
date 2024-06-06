@@ -13,9 +13,9 @@
   <script 
     src="https://code.jquery.com/jquery-3.7.1.min.js" 
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
-    crossorigin="anonymous">
+    crossorigin="anonymous" defer>
   </script>
-  {{ 'application.js' | asset_url | script_tag }}
+  <script src="{{ 'application.js' | asset_url }}" defer></script>
 </head>
 <body>
   {%  include "header" %}
@@ -24,5 +24,9 @@
 
     {%  include "footer" %}
   </main>
+
+  {% if template != "cart" %}
+    {%  include "mini-cart" %}
+  {% endif %}
 </body>
 </html>
