@@ -64,23 +64,77 @@ $(document).ready(function () {
         }
     };
 
-    const onAddToCart = async function (event) {
+    const onAddToCart = function (event) {
         event.preventDefault();
 
         let addToCartForm = document.querySelector('form[action$="/cart/add"]');
         let formData = new FormData(addToCartForm);
 
-        fetch(window.Shopify.routes.root + 'cart/add.j', {
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
             method: 'POST',
             body: formData
         })
-            .then(response => response.json())
+            .then(response => {
+                return response.json();
+            })
             .then(data => {
-                console.log(data)
+                onCartUpdated();
             })
             .catch((error) => {
                 console.error('Error:', error);
-                alert(error.message);
+            });
+    }
+
+    const onCartUpdated = function (event) {
+        fetch(window.Shopify.routes.root + 'cart')
+            .then(response => {
+                return response.text();
+            })
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+
+                let dataCartContents = doc.querySelector(".js-cart-page-contents");
+                let dataCartHtml = dataCartContents.innerHTML;
+                let dataCartItemCounts = dataCartContents.getAttribute("data-cart-item-count");
+                let miniCartContents = document.querySelector(".js-mini-cart-contents");
+                let cartItemCount = document.querySelector(".js-cart-item-count");
+
+                cartItemCount.textContent = dataCartItemCounts;
+                miniCartContents.innerHTML = dataCartHtml;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
+
+    const onLineRemoved = function (event) {
+        event.preventDefault();
+        const removeLink = this.getAttribute("href")
+        const removedQuery = removeLink.split("change?")[1];
+        // console.log("removedQuery", removedQuery);
+
+        const keyValuePairs = removedQuery.split('&');
+        const data = {};
+
+        keyValuePairs.forEach(pair => {
+            const [key, value] = pair.split('=');
+            data[key] = value;
+        });
+        console.log(data)
+
+        fetch(window.Shopify.routes.root + 'cart/change.js', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                onCartUpdated();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
             });
     }
 
@@ -88,4 +142,5 @@ $(document).ready(function () {
     $(document).on('change', '.js-quantity-field', onQuantityFieldChange);
     $(document).on('change', '.js-variant-radio', onVariationRadioChange);
     $(document).on('submit', '#add-to-cart-form', onAddToCart);
+    $(document).on('click', '#mini-cart .js-remove-line', onLineRemoved);
 });
