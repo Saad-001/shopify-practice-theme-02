@@ -137,7 +137,15 @@ ul, ol{
 .valign-center{
    display: flex;
    flex-direction: column;
-   justify-content: center;
+   /* justify-content: center; */
+}
+
+.valign-center > *:first-child {
+   margin-top: auto;
+}  
+
+.valign-center > *:last-child {
+   margin-bottom: auto;
 }
 
 .ta-center {
@@ -498,4 +506,30 @@ button[type="submit"]:not(:disabled):hover, .button:not(:disabled):hover {
 .subtotal-line{
    padding: var(--line-global) 0;
 }
+
+/* mini cart page styles */
+
+#mini-cart {
+   position: fixed;
+   top: var(--header-height);
+   bottom: 0;
+   right: 0;
+   width: 100%;
+   max-width: 380px;
+   background: var(--light-black);
+   display: none;
+}
+
+#mini-cart .mini-cart-contents{
+   overflow: auto;
+   padding: var(--offset-global);
+   height: 100%;
+}
+
+#mini-cart.open-mini-cart {
+   display: block;
+}
+
+
+
 

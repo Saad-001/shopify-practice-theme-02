@@ -4,7 +4,7 @@
     <form action="/cart" method="post" novalidate>
         <div class="cart-lines">
           {% for item in cart.items %}
-            {%  include "line-item" %}
+            {% include "line-item" %}
           {% endfor %}
         </div>
       <div class="subtotal-line flex-space-between">

@@ -121,16 +121,19 @@ $(document).ready(function () {
             const [key, value] = pair.split('=');
             data[key] = value;
         });
-        console.log(data)
 
         fetch(window.Shopify.routes.root + 'cart/change.js', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(data)
         })
             .then(response => {
                 return response.json();
             })
             .then(data => {
+                // console.log(data);
                 onCartUpdated();
             })
             .catch((error) => {
@@ -138,9 +141,29 @@ $(document).ready(function () {
             });
     }
 
+    const onCartButtonClick = function (event) {
+        event.preventDefault();
+        const miniCart = document.querySelector("#mini-cart");
+        const isCartOpen = miniCart.classList.contains("open-mini-cart");
+        const cartText = document.querySelector(".cart-text");
+        const cartCloseText = document.querySelector(".cart-close-text");
+
+        if (isCartOpen) {
+            miniCart.classList.remove("open-mini-cart");
+            cartCloseText.style.display = "none";
+            cartText.style.display = "block";
+        } else {
+            miniCart.classList.add("open-mini-cart");
+            cartCloseText.style.display = "inline-block";
+            cartText.style.display = "none";
+        }
+        // console.log(miniCart);
+    }
+
     $(document).on('click', '.js-quantity-button', onQuantityButtonClick);
     $(document).on('change', '.js-quantity-field', onQuantityFieldChange);
     $(document).on('change', '.js-variant-radio', onVariationRadioChange);
     $(document).on('submit', '#add-to-cart-form', onAddToCart);
     $(document).on('click', '#mini-cart .js-remove-line', onLineRemoved);
+    $(document).on('click', '.js-cart-link', onCartButtonClick);
 });
