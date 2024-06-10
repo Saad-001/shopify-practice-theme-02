@@ -615,11 +615,20 @@ main{
 }
 
 @media only screen and (max-width: 560px) {
+
+   .header-global{
+      padding: var(--line-global) calc(var(--offset-global) / 2);
+   }
+
    #mini-cart{
       max-width: 350px;
    }
 
    #mini-cart .mini-cart-contents{
       padding: calc(var(--offset-global) / 2);
+   }
+
+   .footer-top, .footer-bottom {
+      padding: var(--offset-global) calc(var(--offset-global) / 2);
    }
 }
