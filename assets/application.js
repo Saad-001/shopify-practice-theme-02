@@ -102,6 +102,12 @@ $(document).ready(function () {
 
                 cartItemCount.textContent = dataCartItemCounts;
                 miniCartContents.innerHTML = dataCartHtml;
+
+                if (parseInt(dataCartItemCounts) > 0) {
+                    openMiniCart();
+                } else {
+                    closeMiniCart();
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -112,7 +118,6 @@ $(document).ready(function () {
         event.preventDefault();
         const removeLink = this.getAttribute("href")
         const removedQuery = removeLink.split("change?")[1];
-        // console.log("removedQuery", removedQuery);
 
         const keyValuePairs = removedQuery.split('&');
         const data = {};
@@ -133,7 +138,6 @@ $(document).ready(function () {
                 return response.json();
             })
             .then(data => {
-                // console.log(data);
                 onCartUpdated();
             })
             .catch((error) => {
@@ -141,23 +145,46 @@ $(document).ready(function () {
             });
     }
 
+    const openMiniCart = function () {
+        const miniCart = document.querySelector("#mini-cart");
+        const cartText = document.querySelector(".cart-text");
+        const cartCloseText = document.querySelector(".cart-close-text");
+        const mainElement = document.querySelector("main");
+        const body = document.body;
+
+        miniCart.classList.add("open-mini-cart");
+        cartCloseText.style.display = "inline-block";
+        cartText.style.display = "none";
+        mainElement.style.opacity = 0.3;
+        body.style.overflow = "hidden";
+        mainElement.style.pointerEvents = "none";
+    }
+
+    const closeMiniCart = function () {
+        const miniCart = document.querySelector("#mini-cart");
+        const cartText = document.querySelector(".cart-text");
+        const cartCloseText = document.querySelector(".cart-close-text");
+        const mainElement = document.querySelector("main");
+        const body = document.body;
+
+        miniCart.classList.remove("open-mini-cart");
+        cartCloseText.style.display = "none";
+        cartText.style.display = "block";
+        mainElement.style.opacity = 1;
+        body.style.overflow = "auto";
+        mainElement.style.pointerEvents = "auto";
+    }
+
     const onCartButtonClick = function (event) {
         event.preventDefault();
         const miniCart = document.querySelector("#mini-cart");
         const isCartOpen = miniCart.classList.contains("open-mini-cart");
-        const cartText = document.querySelector(".cart-text");
-        const cartCloseText = document.querySelector(".cart-close-text");
 
         if (isCartOpen) {
-            miniCart.classList.remove("open-mini-cart");
-            cartCloseText.style.display = "none";
-            cartText.style.display = "block";
+            closeMiniCart();
         } else {
-            miniCart.classList.add("open-mini-cart");
-            cartCloseText.style.display = "inline-block";
-            cartText.style.display = "none";
+            openMiniCart();
         }
-        // console.log(miniCart);
     }
 
     $(document).on('click', '.js-quantity-button', onQuantityButtonClick);
@@ -165,5 +192,5 @@ $(document).ready(function () {
     $(document).on('change', '.js-variant-radio', onVariationRadioChange);
     $(document).on('submit', '#add-to-cart-form', onAddToCart);
     $(document).on('click', '#mini-cart .js-remove-line', onLineRemoved);
-    $(document).on('click', '.js-cart-link', onCartButtonClick);
+    $(document).on('click', '.js-cart-link, #mini-cart .js-keep-shoping', onCartButtonClick);
 });

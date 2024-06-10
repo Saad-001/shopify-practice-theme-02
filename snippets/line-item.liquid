@@ -1,7 +1,7 @@
 <div class="line-item text-white flex-space-between">
     <div class="line-info">
         <a href="{{ item.url }}" class="line-title"><span class="h3">{{ item.product.title }}</span> <span class="accent-color">x{{ item.quantity }}</span></a>
-        <p>{{ item.variant.title }} &mdash; {{ item.line_price | money_without_trailing_zeros }}{%if item.quantity > 1%} ({{ item.price |  money_without_trailing_zeros }}/ea){%endif%}
+        <p>{{ item.variant.title }} &mdash; {{ item.line_price | money_without_trailing_zeros }}{%if item.quantity > 1%} ({{ item.price |  money_without_trailing_zeros }}/BDT){%endif%}
         </p>
     </div>
     
